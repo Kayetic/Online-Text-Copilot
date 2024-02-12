@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.textArea {
+  height: 70%;
+  width: 70%;
+  padding: 20px;
+  background-color: rgb(237, 237, 237);
+  border-radius: 0.5rem;
+}
+
+/* Style for temporary tokens */
+.temp-tokens {
+  color: gray;
+}
+
+/* Style for accepted tokens */
+.accepted-tokens {
+  color: black;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+}/*# sourceMappingURL=style.css.map */
