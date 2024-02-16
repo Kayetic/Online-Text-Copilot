@@ -11,13 +11,13 @@
   padding: 20px;
   background-color: rgb(237, 237, 237);
   border-radius: 0.5rem;
+  font-family: sans-serif;
+}
+.textArea * {
+  font-family: sans-serif;
 }
 
 /* Style for temporary tokens */
-.temp-tokens {
-  color: gray;
-}
-
 /* Style for accepted tokens */
 .accepted-tokens {
   color: black;
@@ -27,4 +27,8 @@ body {
   display: grid;
   place-items: center;
   height: 100vh;
+}
+
+.generated-content {
+  color: grey; /* Or use any specific shade of grey you prefer */
 }/*# sourceMappingURL=style.css.map */
