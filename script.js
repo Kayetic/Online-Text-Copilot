@@ -62,6 +62,57 @@ function sendToOpenAI(textToParse) {
     .catch((error) => console.error("OpenAI Error:", error));
 }
 
+const sendToMixtral = function (textToParse) {
+  const startTime = performance.now();
+  const prompt = `Continue the provided text, do not output the provided text, just continue writing based on the context you have.
+
+  Text to continue: 
+
+  "${textToParse}"`;
+  console.log(prompt);
+  const data = {
+    model: "accounts/fireworks/models/mixtral-8x7b-instruct",
+    stream: false,
+    n: 1,
+    messages: [
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    stop: ["<|im_start|>", "<|im_end|>", "<|endoftext|>"],
+    context_length_exceeded_behavior: "truncate",
+    temperature: 0.6,
+    max_tokens: 32,
+  };
+
+  fetch("https://api.fireworks.ai/inference/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer 1kl9aNR9Qn98OGW9wEdLGDk5GawQqFdZwqXliGS4Hdqnfq72`,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const endTime = performance.now();
+      const timeTaken = endTime - startTime;
+      console.warn(
+        `Response received in ${timeTaken.toFixed(2)} milliseconds.`
+      );
+
+      const responseMessage = data.choices[0].message.content.trim();
+      let currentText = textArea.innerHTML.trimEnd();
+      if (!currentText.endsWith(" ")) {
+        currentText += " "; // Ensure one space before appending the response
+      }
+      const responseSpan = `<span class="generated-content">${responseMessage}</span>`;
+      textArea.innerHTML = currentText + responseSpan;
+    })
+    .catch((error) => console.error("OpenAI Error:", error));
+};
+
 // Monitors user input and triggers OpenAI generation (after typing stops)
 let typingTimer;
 const doneTypingInterval = 1000; // 1 second
@@ -69,7 +120,8 @@ const doneTypingInterval = 1000; // 1 second
 function doneTyping() {
   const textToParse = textArea.innerText;
   if (textToParse.trim() !== "" && textToParse.split(" ").length >= 2) {
-    sendToOpenAI(textToParse);
+    // sendToOpenAI(textToParse);
+    sendToMixtral(textToParse);
   }
 }
 
@@ -115,6 +167,7 @@ document.addEventListener("keydown", (event) => {
     event.preventDefault();
     sendToOpenAI(textArea.innerText);
   } else if (event.key === "Tab") {
+    textArea.style.fontFamily = "monospace"; // Ensure consistent spacing
     // Accept generated text
     event.preventDefault();
     const generatedSpans = document.querySelectorAll(".generated-content");
